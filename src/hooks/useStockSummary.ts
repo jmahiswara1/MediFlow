@@ -1,6 +1,6 @@
-import { obatList } from '@/data'
+import { medicineList } from '@/data'
 import { getStockStatus } from '@/utils/statusHelpers'
-import type { Obat, StockStatus } from '@/types'
+import type { Medicine, StockStatus } from '@/types'
 
 export interface StockSummary {
   id: string
@@ -11,21 +11,22 @@ export interface StockSummary {
   daysRemaining: number
 }
 
-function summarize(obat: Obat): StockSummary {
+function summarize(Medicine: Medicine): StockSummary {
   return {
-    id: obat.id,
-    name: obat.name,
-    status: getStockStatus(obat.currentStock, obat.minimumStock),
-    currentStock: obat.currentStock,
-    minimumStock: obat.minimumStock,
-    daysRemaining: obat.dailyUsage > 0 ? Math.floor(obat.currentStock / obat.dailyUsage) : 0,
+    id: Medicine.id,
+    name: Medicine.name,
+    status: getStockStatus(Medicine.currentStock, Medicine.minimumStock),
+    currentStock: Medicine.currentStock,
+    minimumStock: Medicine.minimumStock,
+    daysRemaining:
+      Medicine.dailyUsage > 0 ? Math.floor(Medicine.currentStock / Medicine.dailyUsage) : 0,
   }
 }
 
 export function useStockSummary(): StockSummary[] {
-  return obatList.map(summarize)
+  return medicineList.map(summarize)
 }
 
 export function useStockSummaryByStatus(status: StockStatus): StockSummary[] {
-  return obatList.map(summarize).filter((item) => item.status === status)
+  return medicineList.map(summarize).filter((item) => item.status === status)
 }

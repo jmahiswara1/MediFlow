@@ -1,13 +1,13 @@
 import { create } from 'zustand'
-import { obatList, rumahSakitList } from '@/data'
-import type { Obat, RumahSakit } from '@/types'
+import { medicineList, hospitalList } from '@/data'
+import type { Medicine, Hospital } from '@/types'
 
 interface StockState {
-  obat: Obat[]
-  rumahSakit: RumahSakit[]
+  Medicine: Medicine[]
+  Hospital: Hospital[]
 }
 
 export const useStockStore = create<StockState>()(() => ({
-  obat: obatList,
-  rumahSakit: rumahSakitList,
+  Medicine: medicineList,
+  Hospital: hospitalList,
 }))
