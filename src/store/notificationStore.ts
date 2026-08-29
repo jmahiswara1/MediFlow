@@ -33,9 +33,7 @@ export const useNotificationStore = create<NotificationState>()(
         })),
       markAsRead: (id) =>
         set((state) => ({
-          notifications: state.notifications.map((n) =>
-            n.id === id ? { ...n, read: true } : n,
-          ),
+          notifications: state.notifications.map((n) => (n.id === id ? { ...n, read: true } : n)),
         })),
       markAllAsRead: (userId) =>
         set((state) => ({
@@ -45,9 +43,7 @@ export const useNotificationStore = create<NotificationState>()(
         })),
       clearAll: (userId) =>
         set((state) => ({
-          notifications: userId
-            ? state.notifications.filter((n) => n.userId !== userId)
-            : [],
+          notifications: userId ? state.notifications.filter((n) => n.userId !== userId) : [],
         })),
     }),
     { name: 'mediflow-notifications' },
@@ -56,9 +52,7 @@ export const useNotificationStore = create<NotificationState>()(
 
 // Selector helpers
 export const useNotificationsByUser = (userId: string | undefined) =>
-  useNotificationStore((s) =>
-    userId ? s.notifications.filter((n) => n.userId === userId) : [],
-  )
+  useNotificationStore((s) => (userId ? s.notifications.filter((n) => n.userId === userId) : []))
 
 export const useUnreadCount = (userId: string | undefined) =>
   useNotificationStore((s) =>

@@ -25,8 +25,7 @@ export const useAuthStore = create<AuthState>()(
 
 // Selector helpers
 export const useCurrentUser = () => useAuthStore((s) => s.currentUser)
-export const useRole = (): UserRole | null =>
-  useAuthStore((s) => s.currentUser?.role ?? null)
+export const useRole = (): UserRole | null => useAuthStore((s) => s.currentUser?.role ?? null)
 export const useHospitalId = (): string | null =>
   useAuthStore((s) => s.currentUser?.hospitalId ?? null)
 export const useHospitalName = (): string | null =>

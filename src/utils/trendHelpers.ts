@@ -32,19 +32,16 @@ export function generateTrendSeries(
 }
 
 // Linear regression on recent trend, extrapolate `projectionDays` points forward.
-export function generateProjection(
-  recentTrend: number[],
-  projectionDays: number,
-): number[] {
+export function generateProjection(recentTrend: number[], projectionDays: number): number[] {
   const n = recentTrend.length
   if (n < 2 || projectionDays <= 0) {
     return Array(projectionDays).fill(recentTrend[recentTrend.length - 1] ?? 0)
   }
 
-  const sumX = (n - 1) * n / 2
+  const sumX = ((n - 1) * n) / 2
   const sumY = recentTrend.reduce((a, b) => a + b, 0)
   const sumXY = recentTrend.reduce((acc, y, x) => acc + x * y, 0)
-  const sumXX = (n - 1) * n * (2 * n - 1) / 6
+  const sumXX = ((n - 1) * n * (2 * n - 1)) / 6
 
   const denom = n * sumXX - sumX * sumX
   const slope = denom === 0 ? 0 : (n * sumXY - sumX * sumY) / denom
@@ -68,10 +65,7 @@ export function findDiseaseByName(
   return list.find((d) => d.name.toLowerCase() === normalized)
 }
 
-export function diseasesByRegion(
-  list: Disease[],
-  region: string | null | undefined,
-): Disease[] {
+export function diseasesByRegion(list: Disease[], region: string | null | undefined): Disease[] {
   if (!region) return list
   return list.filter((d) => d.region === region)
 }

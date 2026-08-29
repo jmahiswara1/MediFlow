@@ -12,12 +12,7 @@ interface TransferState {
   requests: TransferRequest[]
   addRequest: (req: AddRequestPayload) => string
   approveRequest: (id: string, approverId: string, approverName: string) => void
-  declineRequest: (
-    id: string,
-    approverId: string,
-    approverName: string,
-    reason: string,
-  ) => void
+  declineRequest: (id: string, approverId: string, approverName: string, reason: string) => void
   markShipped: (id: string, expedition: string) => void
   markCompleted: (id: string, receivedBy: string) => void
   cancelRequest: (id: string) => void
@@ -30,16 +25,12 @@ function genId(): string {
 }
 
 function findApproverByHospital(hospitalId: string): string {
-  const approver = userList.find(
-    (u) => u.role === 'approver' && u.hospitalId === hospitalId,
-  )
+  const approver = userList.find((u) => u.role === 'approver' && u.hospitalId === hospitalId)
   return approver?.id ?? ''
 }
 
 function findRequesterByHospital(hospitalId: string): string {
-  const requester = userList.find(
-    (u) => u.role === 'requester' && u.hospitalId === hospitalId,
-  )
+  const requester = userList.find((u) => u.role === 'requester' && u.hospitalId === hospitalId)
   return requester?.id ?? ''
 }
 
@@ -169,10 +160,7 @@ export const useTransferStore = create<TransferState>()(
             const next: TransferRequest = {
               ...r,
               status: 'shipped',
-              timeline: [
-                ...r.timeline,
-                { status: 'shipped', at: now, expedition },
-              ],
+              timeline: [...r.timeline, { status: 'shipped', at: now, expedition }],
             }
             target = next
             return next
@@ -203,10 +191,7 @@ export const useTransferStore = create<TransferState>()(
             const next: TransferRequest = {
               ...r,
               status: 'completed',
-              timeline: [
-                ...r.timeline,
-                { status: 'completed', at: now, receivedBy },
-              ],
+              timeline: [...r.timeline, { status: 'completed', at: now, receivedBy }],
             }
             target = next
             return next
@@ -264,9 +249,7 @@ export const useIncomingRequests = () => {
     hospitalId
       ? s.requests.filter(
           (r) =>
-            r.toHospitalId === hospitalId &&
-            r.status !== 'completed' &&
-            r.status !== 'rejected',
+            r.toHospitalId === hospitalId && r.status !== 'completed' && r.status !== 'rejected',
         )
       : [],
   )
@@ -276,9 +259,7 @@ export const useOutgoingRequests = () => {
   const hospitalId = useHospitalId()
   return useTransferStore((s) =>
     hospitalId
-      ? s.requests.filter(
-          (r) => r.fromHospitalId === hospitalId && r.status !== 'completed',
-        )
+      ? s.requests.filter((r) => r.fromHospitalId === hospitalId && r.status !== 'completed')
       : [],
   )
 }
