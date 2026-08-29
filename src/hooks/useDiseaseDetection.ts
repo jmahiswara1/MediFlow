@@ -1,15 +1,15 @@
 import { useMemo } from 'react'
-import { kasusPenyakitList } from '@/data'
-import type { KasusPenyakit, DiseaseSeverity } from '@/types'
+import { diseaseList } from '@/data'
+import type { Disease, DiseaseSeverity } from '@/types'
 
-export function useDiseaseDetection() {
+export function useDiseaseDetection(): Disease[] {
   return useMemo(() => {
-    return kasusPenyakitList.filter((kasus) => kasus.severity !== 'normal')
+    return diseaseList.filter((disease) => disease.severity !== 'normal')
   }, [])
 }
 
-export function useDiseaseBySeverity(severity: DiseaseSeverity): KasusPenyakit[] {
+export function useDiseaseBySeverity(severity: DiseaseSeverity): Disease[] {
   return useMemo(() => {
-    return kasusPenyakitList.filter((kasus) => kasus.severity === severity)
+    return diseaseList.filter((disease) => disease.severity === severity)
   }, [severity])
 }
