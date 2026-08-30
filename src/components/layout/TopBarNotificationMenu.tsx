@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   ChevronRight,
   Info,
+  MessageCircle,
   PackageCheck,
   TrendingUp,
   Truck,
@@ -45,6 +46,16 @@ function getNotificationIcon(type: NotificationType) {
       return {
         icon: TrendingUp,
         color: 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/25',
+      }
+    case 'chat-mention':
+      return {
+        icon: MessageCircle,
+        color: 'bg-primary/15 text-primary border-primary/25',
+      }
+    case 'chat-message':
+      return {
+        icon: MessageCircle,
+        color: 'bg-muted text-muted-foreground border-border',
       }
     case 'system':
     default:

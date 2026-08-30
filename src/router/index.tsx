@@ -7,6 +7,7 @@ import { NetworkPage } from '@/features/network/NetworkPage'
 import { AnalyticsPage } from '@/features/analytics/AnalyticsPage'
 import { AiChatPage } from '@/features/ai-chat/AiChatPage'
 import { NotificationsPage } from '@/features/notifications/NotificationsPage'
+import { TeamChatPage } from '@/features/team-chat/TeamChatPage'
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
           { path: 'network', element: <NetworkPage /> },
           { path: 'analytics', element: <AnalyticsPage /> },
           { path: 'assistant', element: <AiChatPage /> },
+          { path: 'chat', element: <TeamChatPage /> },
           { path: 'ai-chat', element: <Navigate to="/assistant" replace /> },
           { path: 'notifications', element: <NotificationsPage /> },
           { path: '*', element: <Navigate to="/" replace /> },

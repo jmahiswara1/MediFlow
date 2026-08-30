@@ -76,6 +76,8 @@ export type NotificationType =
   | 'stock-critical'
   | 'stock-rising'
   | 'system'
+  | 'chat-mention'
+  | 'chat-message'
 
 export interface Notification {
   id: string
@@ -116,4 +118,11 @@ export type {
   RichCard,
   ChatMessage,
   Urgency,
+  ConversationKind,
+  ConversationMember,
+  Conversation,
+  ChatMentionKind,
+  ChatMention,
+  AttachedCard,
+  TeamChatMessage,
 } from './chat'

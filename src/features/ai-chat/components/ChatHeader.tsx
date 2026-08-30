@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Download, RotateCcw, Share2 } from 'lucide-react'
+import { AlertTriangle, Download, RotateCcw, Share2, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useI18n } from '@/i18n/useI18n'
 import { Button } from '@/components/ui/button'
@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -23,16 +22,16 @@ export function ChatHeader({ onReset }: ChatHeaderProps) {
   const handleConfirmReset = () => {
     setShowConfirm(false)
     onReset()
-    toast.success('Riwayat percakapan berhasil direset')
+    toast.success(t('aiChat.toastResetSuccess'))
   }
 
   const handleShare = () => {
     navigator.clipboard?.writeText(window.location.href)
-    toast.success('Tautan percakapan disalin ke clipboard')
+    toast.success(t('aiChat.toastShareSuccess'))
   }
 
   const handleExport = () => {
-    toast.success('Ringkasan inteligensi siap diekspor')
+    toast.success(t('aiChat.toastExportSuccess'))
   }
 
   return (
@@ -75,7 +74,7 @@ export function ChatHeader({ onReset }: ChatHeaderProps) {
             size="sm"
             variant="ghost"
             onClick={() => setShowConfirm(true)}
-            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 gap-1.5 rounded-xl px-2.5 text-xs font-semibold"
+            className="text-muted-foreground hover:text-critical hover:bg-critical/10 h-8 gap-1.5 rounded-xl px-2.5 text-xs font-semibold"
           >
             <RotateCcw className="size-3.5" />
             <span className="hidden md:inline">{t('aiChat.resetChat')}</span>
@@ -83,35 +82,55 @@ export function ChatHeader({ onReset }: ChatHeaderProps) {
         </div>
       </div>
 
-      {/* Reset Confirmation Dialog */}
+      {/* Improved Reset Confirmation Dialog */}
       <Dialog open={showConfirm} onOpenChange={setShowConfirm}>
-        <DialogContent className="max-w-md rounded-2xl">
-          <DialogHeader>
-            <DialogTitle className="text-base font-bold">
-              {t('aiChat.resetConfirmTitle')}
-            </DialogTitle>
-            <DialogDescription className="text-muted-foreground pt-1 text-xs">
-              {t('aiChat.resetConfirmDescription')}
-            </DialogDescription>
+        <DialogContent className="max-w-md gap-0 overflow-hidden rounded-2xl p-0 shadow-2xl">
+          {/* Header */}
+          <DialogHeader className="border-border/70 bg-muted/30 border-b p-5">
+            <div className="flex items-center gap-3">
+              <span className="bg-critical/15 text-critical flex size-10 shrink-0 items-center justify-center rounded-xl shadow-2xs">
+                <AlertTriangle className="size-5" />
+              </span>
+              <div className="min-w-0 flex-1 pr-6">
+                <DialogTitle className="text-base leading-snug font-bold">
+                  {t('aiChat.resetConfirmTitle')}
+                </DialogTitle>
+                <DialogDescription className="text-muted-foreground pt-0.5 text-xs leading-normal">
+                  {t('aiChat.resetConfirmDescription')}
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
-          <DialogFooter className="gap-2 pt-2 sm:gap-0">
+
+          {/* Body with Warning Callout */}
+          <div className="space-y-3 px-5 py-4">
+            <div className="bg-critical/10 border-critical/20 text-critical flex items-start gap-2.5 rounded-xl border p-3 text-xs leading-relaxed">
+              <span className="mt-0.5 shrink-0 font-bold">•</span>
+              <p className="text-foreground/80 font-medium">{t('aiChat.resetConfirmWarning')}</p>
+            </div>
+          </div>
+
+          {/* Footer Actions */}
+          <div className="border-border/70 bg-muted/30 flex items-center justify-end gap-2.5 border-t px-5 py-3.5">
             <Button
+              type="button"
               variant="outline"
               size="sm"
               onClick={() => setShowConfirm(false)}
-              className="rounded-xl"
+              className="cursor-pointer rounded-xl px-4 py-2 text-xs font-semibold"
             >
               {t('common.cancel')}
             </Button>
             <Button
-              variant="destructive"
+              type="button"
               size="sm"
               onClick={handleConfirmReset}
-              className="rounded-xl"
+              className="bg-critical hover:bg-critical/90 cursor-pointer gap-1.5 rounded-xl px-4.5 py-2 text-xs font-bold text-white shadow-2xs transition-all"
             >
-              {t('aiChat.resetChat')}
+              <Trash2 className="size-3.5" />
+              <span>{t('aiChat.resetChat')}</span>
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </>

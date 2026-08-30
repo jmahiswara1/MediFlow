@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Notification } from '@/types'
@@ -62,8 +63,13 @@ export const useNotificationStore = create<NotificationState>()(
 )
 
 // Selector helpers
-export const useNotificationsByUser = (userId: string | undefined) =>
-  useNotificationStore((s) => (userId ? s.notifications.filter((n) => n.userId === userId) : []))
+export const useNotificationsByUser = (userId: string | undefined) => {
+  const notifications = useNotificationStore((s) => s.notifications)
+  return useMemo(
+    () => (userId ? notifications.filter((n) => n.userId === userId) : []),
+    [notifications, userId],
+  )
+}
 
 export const useUnreadCount = (userId: string | undefined) =>
   useNotificationStore((s) =>
