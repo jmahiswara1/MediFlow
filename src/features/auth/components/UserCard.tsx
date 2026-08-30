@@ -26,7 +26,7 @@ export function UserCard({ user, onSelect, disabled }: UserCardProps) {
         {initials}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold leading-tight">{user.name}</p>
+        <p className="truncate text-sm leading-tight font-semibold">{user.name}</p>
         <div className="text-muted-foreground mt-1 flex items-center gap-1.5 text-xs">
           <Building2 className="size-3 shrink-0" />
           <span className="truncate">{user.hospitalName}</span>
@@ -35,9 +35,7 @@ export function UserCard({ user, onSelect, disabled }: UserCardProps) {
       <span
         className={cn(
           'inline-flex shrink-0 items-center rounded-md px-2 py-0.5 text-[11px] font-medium tracking-wide uppercase',
-          isRequester
-            ? 'bg-low text-low-foreground'
-            : 'bg-safe text-safe-foreground',
+          isRequester ? 'bg-low text-low-foreground' : 'bg-safe text-safe-foreground',
         )}
       >
         {user.role}

@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import { Building2, Pill, Send } from 'lucide-react'
 import { useI18n } from '@/i18n/useI18n'
@@ -73,7 +73,7 @@ export function TransferDialog({
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     setValue,
     reset,
     formState: { errors, isSubmitting },
@@ -93,10 +93,11 @@ export function TransferDialog({
     }
   }, [open, toHospital, preSelectedMedicineId, medicines, availableHospitals, reset])
 
-  const selectedHospitalId = watch('targetHospitalId') || initialTargetHospitalId
-  const selectedMedicineId = watch('medicineId')
-  const selectedQuantity = watch('quantity')
-  const selectedUrgency = watch('urgency')
+  const selectedHospitalId =
+    useWatch({ control, name: 'targetHospitalId' }) || initialTargetHospitalId
+  const selectedMedicineId = useWatch({ control, name: 'medicineId' })
+  const selectedQuantity = useWatch({ control, name: 'quantity' })
+  const selectedUrgency = useWatch({ control, name: 'urgency' })
 
   const effectiveToHospital = useMemo(
     () =>
