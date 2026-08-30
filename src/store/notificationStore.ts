@@ -46,7 +46,18 @@ export const useNotificationStore = create<NotificationState>()(
           notifications: userId ? state.notifications.filter((n) => n.userId !== userId) : [],
         })),
     }),
-    { name: 'mediflow-notifications' },
+    {
+      name: 'mediflow-notifications',
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          const existingIds = new Set(state.notifications.map((n) => n.id))
+          const newEntries = notificationList.filter((n) => !existingIds.has(n.id))
+          if (newEntries.length > 0) {
+            state.notifications = [...newEntries, ...state.notifications]
+          }
+        }
+      },
+    },
   ),
 )
 

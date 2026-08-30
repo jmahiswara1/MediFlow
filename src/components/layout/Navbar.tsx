@@ -4,6 +4,7 @@ import { Languages, Moon, Search, Sun } from 'lucide-react'
 import { useI18n } from '@/i18n/useI18n'
 import { useUiStore } from '@/store'
 import { TopBarUserMenu } from '@/components/layout/TopBarUserMenu'
+import { TopBarNotificationMenu } from '@/components/layout/TopBarNotificationMenu'
 
 const routeTitleKey: Record<string, string> = {
   '/': 'dashboard.title',
@@ -80,7 +81,10 @@ export function Navbar() {
         >
           {theme === 'light' ? <Moon className="size-4" /> : <Sun className="size-4" />}
         </button>
-        <TopBarUserMenu />
+        <TopBarNotificationMenu />
+        <div className="ml-1 flex items-center sm:ml-2">
+          <TopBarUserMenu />
+        </div>
       </div>
     </header>
   )
