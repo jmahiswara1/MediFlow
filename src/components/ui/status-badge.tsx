@@ -1,10 +1,7 @@
 import { cn } from '@/lib/utils'
 import type { StockStatus, TransferStatus, Urgency } from '@/types'
 
-export type StatusVariant =
-  | StockStatus
-  | TransferStatus
-  | `urgency-${Urgency}`
+export type StatusVariant = StockStatus | TransferStatus | `urgency-${Urgency}`
 
 interface StatusBadgeProps {
   status: StatusVariant

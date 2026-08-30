@@ -13,9 +13,7 @@ export function RoleGate({ role, children, fallback = null }: RoleGateProps) {
 
   if (!currentRole) return <>{fallback}</>
 
-  const allowed = Array.isArray(role)
-    ? role.includes(currentRole)
-    : currentRole === role
+  const allowed = Array.isArray(role) ? role.includes(currentRole) : currentRole === role
 
   return allowed ? <>{children}</> : <>{fallback}</>
 }

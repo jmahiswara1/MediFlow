@@ -62,7 +62,7 @@ export function LoginPage() {
   return (
     <div className="bg-background flex min-h-screen">
       {/* Hero (hidden on mobile) */}
-      <div className="bg-sidebar text-sidebar-foreground relative hidden flex-1 overflow-hidden border-r border-sidebar-border md:flex">
+      <div className="bg-sidebar text-sidebar-foreground border-sidebar-border relative hidden flex-1 overflow-hidden border-r md:flex">
         <div className="relative z-10 flex flex-col justify-between p-10">
           <div className="flex items-center gap-3">
             <span className="bg-sidebar-primary text-sidebar-primary-foreground flex size-10 items-center justify-center rounded-lg text-sm font-bold">
@@ -73,13 +73,13 @@ export function LoginPage() {
           <div className="max-w-md space-y-4">
             <h1 className="text-4xl font-bold tracking-tight">{t('app.tagline')}</h1>
             <p className="text-sidebar-foreground/70 text-sm leading-relaxed">
-              Pemantauan stok dan distribusi medis antar rumah sakit dengan prediksi berbasis
-              tren kasus penyakit.
+              Pemantauan stok dan distribusi medis antar rumah sakit dengan prediksi berbasis tren
+              kasus penyakit.
             </p>
           </div>
           <div className="text-sidebar-foreground/60 text-xs">Demo mode</div>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-br from-sidebar-primary/20 via-transparent to-transparent" />
+        <div className="from-sidebar-primary/20 absolute inset-0 bg-gradient-to-br via-transparent to-transparent" />
       </div>
 
       {/* Login card */}
