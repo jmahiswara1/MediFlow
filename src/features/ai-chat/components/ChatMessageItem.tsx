@@ -43,16 +43,18 @@ export function ChatMessageItem({ message, onSelectPrompt }: ChatMessageItemProp
 
   if (isUser) {
     return (
-      <div className="flex max-w-[85%] flex-col items-end gap-1.5 self-end sm:max-w-[75%]">
-        <div className="flex items-start gap-2.5">
-          <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-4 py-3 text-xs leading-relaxed font-medium shadow-xs">
+      <div className="ml-auto flex w-full max-w-[88%] flex-col items-end gap-1 self-end sm:max-w-[75%]">
+        <div className="flex items-start justify-end gap-2.5">
+          <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-xs px-4 py-2.5 text-xs leading-relaxed font-medium shadow-xs">
             {message.text}
           </div>
-          <div className="bg-primary/20 text-primary mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-xl">
+          <div className="bg-primary/15 text-primary mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-xl shadow-2xs">
             <UserIcon className="size-4" />
           </div>
         </div>
-        <span className="text-muted-foreground pr-10 text-[10px]">{formattedTime}</span>
+        <span className="text-muted-foreground pr-10.5 text-[10px] tabular-nums">
+          {formattedTime}
+        </span>
       </div>
     )
   }

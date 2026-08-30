@@ -88,7 +88,7 @@ export function AiChatPage() {
           {/* Main Floating Chat Canvas Card */}
           <div className="bg-card/85 border-border/80 relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border shadow-xs">
             {/* Messages / Empty State Area */}
-            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4 pb-28 sm:p-5 sm:pb-32">
+            <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-4 pb-28 sm:p-5 sm:pb-32">
               {!hasMessages ? (
                 <ChatEmptyState />
               ) : (
