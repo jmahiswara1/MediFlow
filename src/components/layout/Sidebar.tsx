@@ -17,7 +17,7 @@ const navItems = [
   { to: '/', key: 'dashboard' as const, icon: LayoutDashboard, end: true },
   { to: '/network', key: 'network' as const, icon: Network, end: false },
   { to: '/analytics', key: 'analytics' as const, icon: Activity, end: false },
-  { to: '/ai-chat', key: 'aiChat' as const, icon: Bot, end: false },
+  { to: '/assistant', key: 'aiChat' as const, icon: Bot, end: false },
   {
     to: '/notifications',
     key: 'notifications' as const,

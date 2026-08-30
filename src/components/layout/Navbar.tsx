@@ -9,7 +9,7 @@ const routeTitleKey: Record<string, string> = {
   '/': 'dashboard.title',
   '/network': 'network.title',
   '/analytics': 'analytics.title',
-  '/ai-chat': 'aiChat.title',
+  '/assistant': 'aiChat.title',
   '/notifications': 'notifications.title',
 }
 
