@@ -8,6 +8,8 @@ import { AnalyticsPage } from '@/features/analytics/AnalyticsPage'
 import { AiChatPage } from '@/features/ai-chat/AiChatPage'
 import { NotificationsPage } from '@/features/notifications/NotificationsPage'
 import { TeamChatPage } from '@/features/team-chat/TeamChatPage'
+import { ProfilePage } from '@/features/profile/ProfilePage'
+import { SettingsPage } from '@/features/settings/SettingsPage'
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -28,6 +30,8 @@ export const router = createBrowserRouter([
           { path: 'chat', element: <TeamChatPage /> },
           { path: 'ai-chat', element: <Navigate to="/assistant" replace /> },
           { path: 'notifications', element: <NotificationsPage /> },
+          { path: 'profile', element: <ProfilePage /> },
+          { path: 'settings', element: <SettingsPage /> },
           { path: '*', element: <Navigate to="/" replace /> },
         ],
       },

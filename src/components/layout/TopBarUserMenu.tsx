@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { LogOut, Settings, User as UserIcon, Building2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuthStore, useCurrentUser } from '@/store'
@@ -6,6 +7,7 @@ import { useI18n } from '@/i18n/useI18n'
 
 export function TopBarUserMenu() {
   const { t } = useI18n()
+  const navigate = useNavigate()
   const currentUser = useCurrentUser()
   const logout = useAuthStore((s) => s.logout)
   const [open, setOpen] = useState(false)
@@ -44,7 +46,7 @@ export function TopBarUserMenu() {
         aria-haspopup="menu"
         aria-expanded={open}
         className={cn(
-          'hover:bg-accent hover:text-accent-foreground flex items-center gap-2 rounded-full p-1 transition-colors',
+          'hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center gap-2 rounded-full p-1 transition-colors',
           open && 'bg-accent',
         )}
       >
@@ -77,18 +79,24 @@ export function TopBarUserMenu() {
           <div className="space-y-0.5 p-1.5">
             <button
               type="button"
-              disabled
-              className="text-muted-foreground hover:bg-muted hover:text-foreground flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+              onClick={() => {
+                setOpen(false)
+                navigate('/profile')
+              }}
+              className="text-foreground/90 hover:bg-muted hover:text-foreground flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-medium transition-colors"
             >
-              <UserIcon className="size-4" />
+              <UserIcon className="text-primary size-4" />
               <span>{t('userMenu.profile')}</span>
             </button>
             <button
               type="button"
-              disabled
-              className="text-muted-foreground hover:bg-muted hover:text-foreground flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+              onClick={() => {
+                setOpen(false)
+                navigate('/settings')
+              }}
+              className="text-foreground/90 hover:bg-muted hover:text-foreground flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-medium transition-colors"
             >
-              <Settings className="size-4" />
+              <Settings className="text-primary size-4" />
               <span>{t('userMenu.settings')}</span>
             </button>
             <div className="border-border my-1 border-t" />
@@ -98,7 +106,7 @@ export function TopBarUserMenu() {
                 setOpen(false)
                 logout()
               }}
-              className="text-critical hover:bg-critical/10 flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-semibold transition-colors"
+              className="text-critical hover:bg-critical/10 flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-semibold transition-colors"
             >
               <LogOut className="size-4" />
               <span>{t('userMenu.logout')}</span>

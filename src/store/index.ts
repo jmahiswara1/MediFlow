@@ -18,3 +18,4 @@ export {
   useTotalUnreadForUser,
   TEAM_CHAT_LIMITS,
 } from './teamChatStore'
+export { useSettingsStore } from './settingsStore'

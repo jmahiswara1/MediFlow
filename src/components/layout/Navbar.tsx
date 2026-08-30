@@ -11,7 +11,10 @@ const routeTitleKey: Record<string, string> = {
   '/network': 'network.title',
   '/analytics': 'analytics.title',
   '/assistant': 'aiChat.title',
+  '/chat': 'nav.teamChat',
   '/notifications': 'notifications.title',
+  '/profile': 'profile.title',
+  '/settings': 'settings.title',
 }
 
 export function Navbar() {
