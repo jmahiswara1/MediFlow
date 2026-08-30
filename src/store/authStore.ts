@@ -5,27 +5,52 @@ import { userList } from '@/data/users'
 
 interface AuthState {
   currentUser: User | null
+  customUsers: Record<string, Partial<User>>
   login: (userId: string) => void
   logout: () => void
+  updateUser: (userId: string, partial: Partial<User>) => void
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       currentUser: null,
+      customUsers: {},
       login: (userId) => {
-        const user = userList.find((u) => u.id === userId)
-        if (user) set({ currentUser: user })
+        const baseUser = userList.find((u) => u.id === userId)
+        if (!baseUser) return
+        const custom = get().customUsers[userId] || {}
+        set({ currentUser: { ...baseUser, ...custom } })
       },
       logout: () => set({ currentUser: null }),
+      updateUser: (userId, partial) => {
+        set((state) => {
+          const updatedCustom = {
+            ...state.customUsers,
+            [userId]: { ...(state.customUsers[userId] || {}), ...partial },
+          }
+          const baseUser = userList.find((u) => u.id === userId)
+          const updatedUser = baseUser
+            ? { ...baseUser, ...updatedCustom[userId] }
+            : state.currentUser
+              ? { ...state.currentUser, ...partial }
+              : null
+
+          return {
+            customUsers: updatedCustom,
+            currentUser: state.currentUser?.id === userId ? updatedUser : state.currentUser,
+          }
+        })
+      },
     }),
     {
       name: 'mediflow-auth',
       onRehydrateStorage: () => (state) => {
         if (state?.currentUser) {
-          const fresh = userList.find((u) => u.id === state.currentUser?.id)
-          if (fresh) {
-            state.currentUser = fresh
+          const baseUser = userList.find((u) => u.id === state.currentUser?.id)
+          const custom = state.customUsers?.[state.currentUser.id] || {}
+          if (baseUser) {
+            state.currentUser = { ...baseUser, ...custom }
           }
         }
       },

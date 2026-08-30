@@ -65,6 +65,13 @@ export interface User {
   hospitalId: string
   hospitalName: string
   avatarSeed: string
+  email?: string
+  phone?: string
+  department?: string
+  specialty?: string
+  licenseNumber?: string
+  bio?: string
+  joinedDate?: string
 }
 
 export type NotificationType =
