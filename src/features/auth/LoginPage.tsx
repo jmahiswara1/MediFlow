@@ -22,6 +22,7 @@ const STORAGE_KEYS = [
   'mediflow-transfers',
   'mediflow-notifications',
   'mediflow-chat',
+  'mediflow-team-chat',
 ]
 
 export function LoginPage() {
