@@ -1,12 +1,13 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { useShallow } from 'zustand/react/shallow'
 import type { TransferRequest, TransferStatus, Urgency } from '@/types'
 import { transferRequestList } from '@/data/transferRequests'
 import { userList } from '@/data/users'
 import { useNotificationStore } from './notificationStore'
 import { useHospitalId } from './authStore'
 
-type AddRequestPayload = Omit<TransferRequest, 'id' | 'createdAt' | 'timeline'>
+type AddRequestPayload = Omit<TransferRequest, 'id' | 'createdAt' | 'timeline' | 'status'>
 
 interface TransferState {
   requests: TransferRequest[]
@@ -16,7 +17,7 @@ interface TransferState {
   markShipped: (id: string, expedition: string) => void
   markCompleted: (id: string, receivedBy: string) => void
   cancelRequest: (id: string) => void
-  // Kept for backward compatibility (used by existing pages if any)
+  // Kept for backward compatibility
   updateStatus: (id: string, status: TransferStatus) => void
 }
 
@@ -48,6 +49,7 @@ export const useTransferStore = create<TransferState>()(
         const now = new Date().toISOString()
         const newReq: TransferRequest = {
           ...req,
+          status: 'pending',
           id,
           createdAt: now,
           timeline: [
@@ -68,7 +70,7 @@ export const useTransferStore = create<TransferState>()(
             userId: approverId,
             type: 'incoming-request',
             title: `Permintaan masuk dari ${req.fromHospitalName}`,
-            snippet: `${req.obatName} ${req.quantity} - Urgency ${urgencyLabel(req.urgency)}`,
+            snippet: `${req.medicineName} ${req.quantity} - Urgency ${urgencyLabel(req.urgency)}`,
             link: `/network?focus=${id}&tab=incoming`,
             transferId: id,
           })
@@ -103,7 +105,7 @@ export const useTransferStore = create<TransferState>()(
               userId: requesterId,
               type: 'request-approved',
               title: 'Permintaan Anda disetujui',
-              snippet: `${target.obatName} ${target.quantity} - ${target.toHospitalName}`,
+              snippet: `${target.medicineName} ${target.quantity} - ${target.toHospitalName}`,
               link: `/network?focus=${id}&tab=outgoing`,
               transferId: id,
             })
@@ -174,7 +176,7 @@ export const useTransferStore = create<TransferState>()(
               userId: requesterId,
               type: 'request-shipped',
               title: 'Permintaan sedang dikirim',
-              snippet: `${target.obatName} - ETA ~3 jam`,
+              snippet: `${target.medicineName} - ETA ~3 jam`,
               link: `/network?focus=${id}&tab=outgoing`,
               transferId: id,
             })
@@ -206,7 +208,7 @@ export const useTransferStore = create<TransferState>()(
               userId: requesterId,
               type: 'request-completed',
               title: 'Transfer selesai',
-              snippet: `${target.obatName} - Diterima oleh ${receivedBy}`,
+              snippet: `${target.medicineName} - Diterima oleh ${receivedBy}`,
               link: `/network?focus=${id}&tab=history`,
               transferId: id,
             })
@@ -216,7 +218,7 @@ export const useTransferStore = create<TransferState>()(
               userId: approverId,
               type: 'request-completed',
               title: 'Transfer selesai',
-              snippet: `${target.obatName} - Telah diterima ${receivedBy}`,
+              snippet: `${target.medicineName} - Telah diterima ${receivedBy}`,
               link: `/network?focus=${id}&tab=history`,
               transferId: id,
             })
@@ -236,7 +238,23 @@ export const useTransferStore = create<TransferState>()(
         }))
       },
     }),
-    { name: 'mediflow-transfers' },
+    {
+      name: 'mediflow-transfers',
+      onRehydrateStorage: () => (state) => {
+        if (state?.requests) {
+          // Re-sync hospital names from real list if needed
+          state.requests = state.requests.map((r) => {
+            const fromH = userList.find((u) => u.hospitalId === r.fromHospitalId)
+            const toH = userList.find((u) => u.hospitalId === r.toHospitalId)
+            return {
+              ...r,
+              fromHospitalName: fromH?.hospitalName ?? r.fromHospitalName,
+              toHospitalName: toH?.hospitalName ?? r.toHospitalName,
+            }
+          })
+        }
+      },
+    },
   ),
 )
 
@@ -245,22 +263,26 @@ export const useAllRequests = () => useTransferStore((s) => s.requests)
 
 export const useIncomingRequests = () => {
   const hospitalId = useHospitalId()
-  return useTransferStore((s) =>
-    hospitalId
-      ? s.requests.filter(
-          (r) =>
-            r.toHospitalId === hospitalId && r.status !== 'completed' && r.status !== 'rejected',
-        )
-      : [],
+  return useTransferStore(
+    useShallow((s) =>
+      hospitalId
+        ? s.requests.filter(
+            (r) =>
+              r.toHospitalId === hospitalId && r.status !== 'completed' && r.status !== 'rejected',
+          )
+        : [],
+    ),
   )
 }
 
 export const useOutgoingRequests = () => {
   const hospitalId = useHospitalId()
-  return useTransferStore((s) =>
-    hospitalId
-      ? s.requests.filter((r) => r.fromHospitalId === hospitalId && r.status !== 'completed')
-      : [],
+  return useTransferStore(
+    useShallow((s) =>
+      hospitalId
+        ? s.requests.filter((r) => r.fromHospitalId === hospitalId && r.status !== 'completed')
+        : [],
+    ),
   )
 }
 

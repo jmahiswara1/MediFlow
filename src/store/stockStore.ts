@@ -3,11 +3,11 @@ import { medicineList, hospitalList } from '@/data'
 import type { Medicine, Hospital } from '@/types'
 
 interface StockState {
-  Medicine: Medicine[]
-  Hospital: Hospital[]
+  medicines: Medicine[]
+  hospitals: Hospital[]
 }
 
 export const useStockStore = create<StockState>()(() => ({
-  Medicine: medicineList,
-  Hospital: hospitalList,
+  medicines: medicineList,
+  hospitals: hospitalList,
 }))

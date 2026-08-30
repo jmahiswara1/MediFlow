@@ -4,8 +4,8 @@ import type { StockStatus, TransferStatus } from './index'
 
 export interface StockStatusCard {
   type: 'stock-status'
-  obatId: string
-  obatName: string
+  medicineId: string
+  medicineName: string
   currentStock: number
   unit: string
   dailyUsage: number
@@ -43,7 +43,7 @@ export interface TransferCard {
   transferId: string
   fromHospitalName: string
   toHospitalName: string
-  obatName: string
+  medicineName: string
   quantity: number
   status: TransferStatus
   createdAt: string
