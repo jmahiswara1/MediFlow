@@ -7,9 +7,16 @@ import {
   ChevronRight,
   LayoutDashboard,
   LogOut,
+  MessageCircle,
   Network,
 } from 'lucide-react'
-import { useAuthStore, useCurrentUser, useUnreadCount, useUiStore } from '@/store'
+import {
+  useAuthStore,
+  useCurrentUser,
+  useTotalUnreadForUser,
+  useUnreadCount,
+  useUiStore,
+} from '@/store'
 import { useI18n } from '@/i18n/useI18n'
 import { cn } from '@/lib/utils'
 
@@ -18,6 +25,13 @@ const navItems = [
   { to: '/network', key: 'network' as const, icon: Network, end: false },
   { to: '/analytics', key: 'analytics' as const, icon: Activity, end: false },
   { to: '/assistant', key: 'aiChat' as const, icon: Bot, end: false },
+  {
+    to: '/chat',
+    key: 'teamChat' as const,
+    icon: MessageCircle,
+    end: false,
+    showBadge: 'chat' as const,
+  },
   {
     to: '/notifications',
     key: 'notifications' as const,
@@ -35,6 +49,7 @@ export function Sidebar() {
   const logout = useAuthStore((s) => s.logout)
   const unreadCount = useUnreadCount(currentUser?.id)
 
+  const chatUnread = useTotalUnreadForUser(currentUser?.id)
   return (
     <aside
       data-collapsed={collapsed}
@@ -75,7 +90,10 @@ export function Sidebar() {
       {/* Nav items */}
       <nav className="relative z-10 flex flex-1 flex-col items-stretch gap-1 overflow-y-auto px-3 py-4">
         {navItems.map((item) => {
-          const badge = item.showBadge ? unreadCount : 0
+          let badge = 0
+          if (item.showBadge === true) badge = unreadCount
+          else if (item.showBadge === 'chat') badge = chatUnread
+
           const label = t(`nav.${item.key}`)
           return (
             <NavLink

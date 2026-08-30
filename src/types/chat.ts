@@ -66,3 +66,52 @@ export interface ChatMessage {
 }
 
 export type Urgency = 'high' | 'normal' | 'low'
+
+// === Team Chat (user-to-user DMs + groups with domain integration) ===
+
+export type ConversationKind = 'dm' | 'group'
+
+export interface ConversationMember {
+  userId: string
+  joinedAt: string
+  lastReadAt?: string
+}
+
+export interface Conversation {
+  id: string
+  kind: ConversationKind
+  participantIds: string[]
+  name?: string
+  description?: string
+  avatarSeed?: string
+  createdBy: string
+  createdAt: string
+  lastActivityAt: string
+  lastMessagePreview?: string
+  members: ConversationMember[]
+}
+
+export type ChatMentionKind = 'medicine' | 'hospital' | 'transfer' | 'user'
+
+export interface ChatMention {
+  kind: ChatMentionKind
+  refId: string
+  label: string
+  href?: string
+}
+
+export type AttachedCard =
+  | { type: 'stock'; medicineId: string; hospitalId: string }
+  | { type: 'hospital'; hospitalId: string }
+  | { type: 'transfer'; transferId: string }
+
+export interface TeamChatMessage {
+  id: string
+  conversationId: string
+  senderId: string
+  text?: string
+  mentions?: ChatMention[]
+  attachments?: AttachedCard[]
+  createdAt: string
+  editedAt?: string
+}
