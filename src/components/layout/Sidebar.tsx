@@ -9,6 +9,7 @@ import {
   LogOut,
   MessageCircle,
   Network,
+  Settings,
 } from 'lucide-react'
 import {
   useAuthStore,
@@ -38,6 +39,12 @@ const navItems = [
     icon: Bell,
     end: false,
     showBadge: true,
+  },
+  {
+    to: '/settings',
+    key: 'settings' as const,
+    icon: Settings,
+    end: false,
   },
 ]
 
