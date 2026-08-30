@@ -19,7 +19,17 @@ export const useAuthStore = create<AuthState>()(
       },
       logout: () => set({ currentUser: null }),
     }),
-    { name: 'mediflow-auth' },
+    {
+      name: 'mediflow-auth',
+      onRehydrateStorage: () => (state) => {
+        if (state?.currentUser) {
+          const fresh = userList.find((u) => u.id === state.currentUser?.id)
+          if (fresh) {
+            state.currentUser = fresh
+          }
+        }
+      },
+    },
   ),
 )
 

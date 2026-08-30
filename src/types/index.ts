@@ -42,8 +42,8 @@ export interface TransferRequest {
   fromHospitalName: string
   toHospitalId: string
   toHospitalName: string
-  obatId: string
-  obatName: string
+  medicineId: string
+  medicineName: string
   quantity: number
   urgency: 'high' | 'normal' | 'low'
   notes: string
@@ -101,7 +101,7 @@ export interface TransferTimelineEvent {
 }
 
 export interface HospitalStock {
-  obatId: string
+  medicineId: string
   currentStock: number
   minimumStock: number
   dailyUsage: number

@@ -6,7 +6,7 @@ export const userList: User[] = [
     name: 'Rina Wulandari',
     role: 'requester',
     hospitalId: 'rs-001',
-    hospitalName: 'RSUD Kota A',
+    hospitalName: 'RSUD Dr. Soetomo',
     avatarSeed: 'RW',
   },
   {
@@ -14,7 +14,7 @@ export const userList: User[] = [
     name: 'Budi Santoso',
     role: 'requester',
     hospitalId: 'rs-002',
-    hospitalName: 'RS Harapan Bunda',
+    hospitalName: 'RSUD Dr. M. Soewandhie',
     avatarSeed: 'BS',
   },
   {
@@ -22,7 +22,7 @@ export const userList: User[] = [
     name: 'dr. Andi Pratama',
     role: 'approver',
     hospitalId: 'rs-004',
-    hospitalName: 'RS Sentosa D',
+    hospitalName: 'RS Siloam Hospitals Surabaya',
     avatarSeed: 'AP',
   },
   {
@@ -30,7 +30,7 @@ export const userList: User[] = [
     name: 'Siti Rahayu',
     role: 'approver',
     hospitalId: 'rs-005',
-    hospitalName: 'RSUD E Sejahtera',
+    hospitalName: 'RS PHC Surabaya',
     avatarSeed: 'SR',
   },
   {
@@ -38,7 +38,7 @@ export const userList: User[] = [
     name: 'Dewi Lestari',
     role: 'requester',
     hospitalId: 'rs-003',
-    hospitalName: 'RS Medika C',
+    hospitalName: 'RS Universitas Airlangga',
     avatarSeed: 'DL',
   },
 ]
