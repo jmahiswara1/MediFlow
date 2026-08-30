@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { LogOut, Settings, User as UserIcon } from 'lucide-react'
+import { LogOut, Settings, User as UserIcon, Building2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuthStore, useCurrentUser } from '@/store'
 import { useI18n } from '@/i18n/useI18n'
@@ -32,7 +32,8 @@ export function TopBarUserMenu() {
   if (!currentUser) return null
 
   const initials = currentUser.avatarSeed || currentUser.name.slice(0, 2).toUpperCase()
-  const roleLabel = currentUser.role === 'approver' ? t('userMenu.roleApprover') : t('userMenu.roleRequester')
+  const isApprover = currentUser.role === 'approver'
+  const roleLabel = isApprover ? t('userMenu.roleApprover') : t('userMenu.roleRequester')
 
   return (
     <div ref={wrapperRef} className="relative">
@@ -42,9 +43,12 @@ export function TopBarUserMenu() {
         aria-label={open ? t('topBar.closeMenu') : t('topBar.openMenu')}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="hover:bg-accent hover:text-accent-foreground flex items-center gap-2 rounded-full p-1 transition-colors"
+        className={cn(
+          'hover:bg-accent hover:text-accent-foreground flex items-center gap-2 rounded-full p-1 transition-colors',
+          open && 'bg-accent',
+        )}
       >
-        <span className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-full text-xs font-bold">
+        <span className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-full text-xs font-bold shadow-xs">
           {initials}
         </span>
       </button>
@@ -53,52 +57,51 @@ export function TopBarUserMenu() {
         <div
           role="menu"
           className={cn(
-            'bg-popover text-popover-foreground absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-lg border shadow-lg',
+            'bg-popover text-popover-foreground border-border absolute right-0 z-50 mt-2.5 w-64 overflow-hidden rounded-2xl border shadow-xl',
             'animate-in fade-in slide-in-from-top-2 duration-150',
           )}
         >
-          <div className="border-b p-3">
-            <p className="text-sm font-semibold leading-tight">{currentUser.name}</p>
-            <p className="text-muted-foreground mt-0.5 text-xs">{currentUser.hospitalName}</p>
-            <span
-              className={cn(
-                'mt-2 inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-medium tracking-wide',
-                currentUser.role === 'approver'
-                  ? 'bg-safe text-safe-foreground'
-                  : 'bg-low text-low-foreground',
-              )}
-            >
-              {roleLabel}
-            </span>
+          <div className="border-border bg-muted/20 space-y-1.5 border-b p-3.5">
+            <p className="text-foreground text-sm leading-tight font-bold">{currentUser.name}</p>
+            <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
+              <Building2 className="text-primary size-3.5 shrink-0" />
+              <span className="truncate">{currentUser.hospitalName}</span>
+            </div>
+            <div className="pt-0.5">
+              <span className="bg-secondary text-secondary-foreground inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
+                {roleLabel}
+              </span>
+            </div>
           </div>
-          <div className="p-1">
+
+          <div className="space-y-0.5 p-1.5">
             <button
               type="button"
               disabled
-              className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+              className="text-muted-foreground hover:bg-muted hover:text-foreground flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60"
             >
               <UserIcon className="size-4" />
-              {t('userMenu.profile')}
+              <span>{t('userMenu.profile')}</span>
             </button>
             <button
               type="button"
               disabled
-              className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+              className="text-muted-foreground hover:bg-muted hover:text-foreground flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Settings className="size-4" />
-              {t('userMenu.settings')}
+              <span>{t('userMenu.settings')}</span>
             </button>
-            <div className="border-t my-1" />
+            <div className="border-border my-1 border-t" />
             <button
               type="button"
               onClick={() => {
                 setOpen(false)
                 logout()
               }}
-              className="text-critical hover:bg-accent flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm font-medium transition-colors"
+              className="text-critical hover:bg-critical/10 flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-semibold transition-colors"
             >
               <LogOut className="size-4" />
-              {t('userMenu.logout')}
+              <span>{t('userMenu.logout')}</span>
             </button>
           </div>
         </div>
