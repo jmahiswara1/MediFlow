@@ -13,6 +13,7 @@ export function AnalyticsPage() {
     diseaseParam,
     rangeParam,
     regionParam,
+    medicineQueryParam,
     setDisease,
     setRange,
     setRegion,
@@ -66,11 +67,12 @@ export function AnalyticsPage() {
         onSelectRegion={setRegion}
       />
 
-      {/* 2-Column Main Content Grid */}
+      {/* Chart + Reasoning Insights (side by side — both are compact enough for this) */}
       <div className="grid items-start gap-6 lg:grid-cols-12">
-        {/* Left Column (Chart + Reasoning Insights) */}
-        <div className="flex flex-col gap-6 lg:col-span-7">
+        <div className="lg:col-span-7">
           <DiseaseTrendChart data={chartData} disease={activeDisease} />
+        </div>
+        <div className="lg:col-span-5">
           <EpidemiologyReasoningCard
             title={reasoning.title}
             points={reasoning.points}
@@ -78,12 +80,10 @@ export function AnalyticsPage() {
             recommendedMedicineId={reasoning.recommendedMedicineId}
           />
         </div>
-
-        {/* Right Column (Stock Runway Prediction Table) */}
-        <div className="flex flex-col lg:col-span-5">
-          <StockPredictionTable items={stockPredictions} />
-        </div>
       </div>
+
+      {/* Stock Runway Prediction Table — full width so its 5 columns have room to breathe */}
+      <StockPredictionTable items={stockPredictions} initialSearch={medicineQueryParam} />
     </div>
   )
 }

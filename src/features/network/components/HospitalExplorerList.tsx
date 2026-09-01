@@ -10,6 +10,7 @@ interface HospitalExplorerListProps {
   hospitals: Hospital[]
   currentHospitalId: string | null
   onSelectHospital: (hospitalId: string) => void
+  initialSearch?: string
 }
 
 type StatusFilter = 'all' | StockStatus
@@ -18,10 +19,19 @@ export function HospitalExplorerList({
   hospitals,
   currentHospitalId,
   onSelectHospital,
+  initialSearch = '',
 }: HospitalExplorerListProps) {
   const { t } = useI18n()
-  const [search, setSearch] = useState('')
+
+  const [search, setSearch] = useState(initialSearch)
+  const [prevInitialSearch, setPrevInitialSearch] = useState(initialSearch)
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
+
+  // Gantikan useEffect: Update state sinkron saat render jika props berubah
+  if (initialSearch !== prevInitialSearch) {
+    setPrevInitialSearch(initialSearch)
+    setSearch(initialSearch)
+  }
 
   const currentHospital = useMemo(
     () => hospitals.find((h) => h.id === currentHospitalId),
@@ -58,7 +68,6 @@ export function HospitalExplorerList({
         return true
       })
       .sort((a, b) => {
-        // Own hospital first, then critical, then distance
         if (a.id === currentHospitalId) return -1
         if (b.id === currentHospitalId) return 1
         const statusOrder: Record<StockStatus, number> = { critical: 0, low: 1, safe: 2 }
@@ -70,7 +79,7 @@ export function HospitalExplorerList({
   }, [hospitals, currentHospital, currentHospitalId, statusFilter, search])
 
   return (
-    <div className="bg-card text-card-foreground border-border flex flex-col rounded-2xl border shadow-sm">
+    <div className="bg-card text-card-foreground border-border flex h-full flex-col overflow-hidden rounded-2xl border shadow-sm">
       {/* Header & Search */}
       <div className="border-border space-y-3 border-b p-4">
         <div>
@@ -92,7 +101,7 @@ export function HospitalExplorerList({
         </div>
 
         {/* Filter Pills */}
-        <div className="flex gap-1.5 overflow-x-auto pb-1">
+        <div className="flex flex-wrap gap-1.5">
           {(['all', 'critical', 'low', 'safe'] as StatusFilter[]).map((st) => {
             const isActive = statusFilter === st
             const label = st === 'all' ? t('network.allHospitals') : t(`status.${st}`)
@@ -127,7 +136,7 @@ export function HospitalExplorerList({
       </div>
 
       {/* Hospital List */}
-      <div className="p-3">
+      <div className="flex-1 overflow-y-auto p-3">
         {filteredHospitals.length === 0 ? (
           <div className="text-muted-foreground py-10 text-center text-xs">
             {t('network.noResults')}

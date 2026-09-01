@@ -32,16 +32,15 @@ export function useAnalyticsData() {
   const hospitals = useStockStore((s) => s.hospitals)
   const medicines = useStockStore((s) => s.medicines)
 
-  // Current hospital stocks
   const currentHospital = useMemo(
     () => hospitals.find((h) => h.id === hospitalId) ?? hospitals[0] ?? null,
     [hospitals, hospitalId],
   )
 
-  // Filter params
   const diseaseParam = searchParams.get('disease') || 'all'
   const rangeParam = (searchParams.get('range') as RangeOption) || '30d'
   const regionParam = searchParams.get('region') || 'Surabaya & Jawa Timur'
+  const medicineQueryParam = searchParams.get('medQ') ?? ''
 
   const setDisease = (disease: string) => {
     const next = new URLSearchParams(searchParams)
@@ -64,16 +63,13 @@ export function useAnalyticsData() {
     setSearchParams(next, { replace: true })
   }
 
-  // Filtered diseases based on region
   const availableDiseases = useMemo(() => {
     if (regionParam === 'all') return diseaseList
     return diseaseList.filter((d) => d.region === regionParam)
   }, [regionParam])
 
-  // Active selected disease object (or first one / aggregated)
   const activeDisease = useMemo<Disease | null>(() => {
     if (diseaseParam === 'all') {
-      // Find the highest severity disease in the active region as featured
       const outbreak = availableDiseases.find((d) => d.severity === 'outbreak')
       if (outbreak) return outbreak
       const rising = availableDiseases.find((d) => d.severity === 'rising')
@@ -90,7 +86,6 @@ export function useAnalyticsData() {
     )
   }, [availableDiseases, diseaseParam])
 
-  // Chart Data Generation
   const chartData = useMemo<TrendDataPoint[]>(() => {
     const historyDays = rangeParam === '7d' ? 7 : rangeParam === '90d' ? 90 : 30
     const projectionDays = rangeParam === '7d' ? 7 : rangeParam === '90d' ? 30 : 14
@@ -99,7 +94,6 @@ export function useAnalyticsData() {
       return generateTrendSeries(activeDisease.trend, historyDays, projectionDays)
     }
 
-    // Aggregated trend across available diseases
     const aggTrend = [0, 0, 0, 0, 0, 0]
     for (const d of availableDiseases) {
       d.trend.forEach((v, idx) => {
@@ -140,7 +134,6 @@ export function useAnalyticsData() {
       .sort((a, b) => a.daysLeft - b.daysLeft)
   }, [medicines, currentHospital, activeDisease])
 
-  // KPIs
   const kpis = useMemo(() => {
     let totalRegionalCases = 0
     let prevTotal = 0
@@ -169,7 +162,6 @@ export function useAnalyticsData() {
     }
   }, [availableDiseases, stockPredictions])
 
-  // AI Reasoning
   const reasoning = useMemo(() => {
     if (!activeDisease) {
       return {
@@ -213,6 +205,7 @@ export function useAnalyticsData() {
     diseaseParam,
     rangeParam,
     regionParam,
+    medicineQueryParam,
     setDisease,
     setRange,
     setRegion,

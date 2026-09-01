@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Plus, X } from 'lucide-react'
+import { Package, Plus, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { useI18n } from '@/i18n/useI18n'
-import { useOutgoingRequests, useTransferStore } from '@/store'
+import { useCurrentUser, useOutgoingRequests, useTransferStore } from '@/store'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import type { TransferRequest, Urgency } from '@/types'
 import { formatRelative } from '@/utils/dateHelpers'
 
@@ -29,8 +30,17 @@ const URGENCY_BADGE: Record<Urgency, string> = {
 export function OutgoingRequestsTable({ onNewRequest }: OutgoingRequestsTableProps) {
   const { t, locale } = useI18n()
   const requests = useOutgoingRequests()
+  const currentUser = useCurrentUser()
   const cancel = useTransferStore((s) => s.cancelRequest)
+  const markCompleted = useTransferStore((s) => s.markCompleted)
   const [cancelTarget, setCancelTarget] = useState<TransferRequest | null>(null)
+  const [receiveTarget, setReceiveTarget] = useState<TransferRequest | null>(null)
+  const [receivedBy, setReceivedBy] = useState('')
+
+  // Defense-in-depth: even if a parent passes onNewRequest, never expose the
+  // "New Request" (send) action to a non-requester role (e.g. 'approver').
+  const canCreateRequest = currentUser?.role === 'requester'
+  const showNewRequestButton = Boolean(onNewRequest) && canCreateRequest
 
   const handleCancelConfirm = () => {
     if (!cancelTarget) return
@@ -41,11 +51,27 @@ export function OutgoingRequestsTable({ onNewRequest }: OutgoingRequestsTablePro
     setCancelTarget(null)
   }
 
+  const openReceiveDialog = (req: TransferRequest) => {
+    setReceiveTarget(req)
+    setReceivedBy(currentUser?.name ?? '')
+  }
+
+  const handleReceiveConfirm = () => {
+    if (!receiveTarget) return
+    if (receivedBy.trim().length < 2) return
+    markCompleted(receiveTarget.id, receivedBy.trim())
+    toast.success(t('transfer.confirmReceipt'), {
+      description: `${receiveTarget.medicineName} • ${receivedBy.trim()}`,
+    })
+    setReceiveTarget(null)
+    setReceivedBy('')
+  }
+
   if (requests.length === 0) {
     return (
       <div className="bg-card text-card-foreground flex flex-col items-center justify-center rounded-2xl border p-12 text-center shadow-sm">
         <p className="text-muted-foreground text-sm">{t('network.detail.emptyOutgoing')}</p>
-        {onNewRequest && (
+        {showNewRequestButton && (
           <Button onClick={onNewRequest} className="mt-4 gap-2 rounded-xl">
             <Plus className="size-4" />
             <span>{t('network.createNew')}</span>
@@ -67,7 +93,7 @@ export function OutgoingRequestsTable({ onNewRequest }: OutgoingRequestsTablePro
               {requests.length} {t('network.requestsCount')}
             </p>
           </div>
-          {onNewRequest && (
+          {showNewRequestButton && (
             <Button
               size="sm"
               onClick={onNewRequest}
@@ -128,6 +154,16 @@ export function OutgoingRequestsTable({ onNewRequest }: OutgoingRequestsTablePro
                         <X className="size-3.5" />
                         <span>{t('transfer.cancel')}</span>
                       </Button>
+                    ) : req.status === 'shipped' ? (
+                      <Button
+                        size="sm"
+                        variant="success"
+                        onClick={() => openReceiveDialog(req)}
+                        className="gap-1 rounded-lg font-semibold"
+                      >
+                        <Package className="size-3.5" />
+                        <span>{t('transfer.confirmReceipt')}</span>
+                      </Button>
                     ) : (
                       <span className="text-muted-foreground text-xs font-medium">
                         {t('network.processed')}
@@ -163,6 +199,45 @@ export function OutgoingRequestsTable({ onNewRequest }: OutgoingRequestsTablePro
               className="rounded-xl font-semibold"
             >
               {t('transfer.cancel')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={Boolean(receiveTarget)}
+        onOpenChange={(open) => !open && setReceiveTarget(null)}
+      >
+        <DialogContent className="rounded-2xl sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold">{t('transfer.confirmReceipt')}</DialogTitle>
+            <DialogDescription className="text-xs">
+              {receiveTarget?.medicineName} • {receiveTarget?.quantity} item{' '}
+              {t('transfer.fromHospital')} {receiveTarget?.toHospitalName}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <label className="text-foreground text-xs font-semibold">
+              {t('transfer.receivedByLabel')}
+            </label>
+            <Input
+              value={receivedBy}
+              onChange={(event) => setReceivedBy(event.target.value)}
+              placeholder={t('transfer.receivedByPlaceholder')}
+              maxLength={80}
+              className="rounded-xl text-xs"
+            />
+          </div>
+          <DialogFooter className="gap-2 pt-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setReceiveTarget(null)} className="rounded-xl">
+              {t('common.cancel')}
+            </Button>
+            <Button
+              onClick={handleReceiveConfirm}
+              disabled={receivedBy.trim().length < 2}
+              className="rounded-xl font-semibold"
+            >
+              {t('transfer.confirmReceipt')}
             </Button>
           </DialogFooter>
         </DialogContent>

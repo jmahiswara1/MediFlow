@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Check, X } from 'lucide-react'
+import { Check, Truck, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { useI18n } from '@/i18n/useI18n'
 import { useCurrentUser, useIncomingRequests, useTransferStore } from '@/store'
@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
 import type { TransferRequest, Urgency } from '@/types'
 import { formatRelative } from '@/utils/dateHelpers'
 
@@ -29,8 +30,11 @@ export function IncomingRequestsTable() {
   const currentUser = useCurrentUser()
   const approve = useTransferStore((s) => s.approveRequest)
   const decline = useTransferStore((s) => s.declineRequest)
+  const markShipped = useTransferStore((s) => s.markShipped)
   const [declineTarget, setDeclineTarget] = useState<TransferRequest | null>(null)
   const [declineReason, setDeclineReason] = useState('')
+  const [shipTarget, setShipTarget] = useState<TransferRequest | null>(null)
+  const [expedition, setExpedition] = useState('')
 
   const handleApprove = (req: TransferRequest) => {
     if (!currentUser) return
@@ -49,6 +53,17 @@ export function IncomingRequestsTable() {
     })
     setDeclineTarget(null)
     setDeclineReason('')
+  }
+
+  const handleShipConfirm = () => {
+    if (!shipTarget) return
+    if (expedition.trim().length < 2) return
+    markShipped(shipTarget.id, expedition.trim())
+    toast.success(t('transfer.markShipped'), {
+      description: `${shipTarget.medicineName} • ${expedition.trim()}`,
+    })
+    setShipTarget(null)
+    setExpedition('')
   }
 
   if (requests.length === 0) {
@@ -133,6 +148,15 @@ export function IncomingRequestsTable() {
                             <span>{t('transfer.approve')}</span>
                           </Button>
                         </>
+                      ) : req.status === 'approved' ? (
+                        <Button
+                          size="sm"
+                          onClick={() => setShipTarget(req)}
+                          className="gap-1 rounded-lg font-semibold"
+                        >
+                          <Truck className="size-3.5" />
+                          <span>{t('transfer.markShipped')}</span>
+                        </Button>
                       ) : (
                         <span className="text-muted-foreground text-xs font-medium">
                           {t('network.processed')}
@@ -184,6 +208,42 @@ export function IncomingRequestsTable() {
               className="rounded-xl font-semibold"
             >
               {t('transfer.decline')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(shipTarget)} onOpenChange={(open) => !open && setShipTarget(null)}>
+        <DialogContent className="rounded-2xl sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold">{t('transfer.markShipped')}</DialogTitle>
+            <DialogDescription className="text-xs">
+              {shipTarget?.medicineName} • {shipTarget?.quantity} item {t('transfer.toHospital')}{' '}
+              {shipTarget?.fromHospitalName}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <label className="text-foreground text-xs font-semibold">
+              {t('transfer.expeditionLabel')}
+            </label>
+            <Input
+              value={expedition}
+              onChange={(event) => setExpedition(event.target.value)}
+              placeholder={t('transfer.expeditionPlaceholder')}
+              maxLength={80}
+              className="rounded-xl text-xs"
+            />
+          </div>
+          <DialogFooter className="gap-2 pt-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setShipTarget(null)} className="rounded-xl">
+              {t('common.cancel')}
+            </Button>
+            <Button
+              onClick={handleShipConfirm}
+              disabled={expedition.trim().length < 2}
+              className="rounded-xl font-semibold"
+            >
+              {t('transfer.markShipped')}
             </Button>
           </DialogFooter>
         </DialogContent>

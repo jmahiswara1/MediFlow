@@ -5,6 +5,24 @@
     <link rel="icon" type="image/png" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MediFlow</title>
+    <script>
+      // Runs before React mounts so the correct theme is applied on the
+      // very first paint (avoids a light->dark flash on reload).
+      // Must read the same localStorage key/shape used by uiStore's
+      // zustand `persist` middleware ({ name: 'mediflow-ui' }).
+      ;(function () {
+        try {
+          var raw = localStorage.getItem('mediflow-ui')
+          var theme = raw ? JSON.parse(raw).state.theme : 'light'
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark')
+            document.documentElement.style.colorScheme = 'dark'
+          }
+        } catch (e) {
+          // Ignore malformed/missing storage - defaults to light.
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { ArrowDownToLine, ArrowUpFromLine, History, Map as MapIcon, Plus } from 'lucide-react'
+import { ArrowDownToLine, ArrowUpFromLine, History, Map as MapIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/i18n/useI18n'
 import {
@@ -10,7 +10,6 @@ import {
   useIncomingRequests,
   useOutgoingRequests,
 } from '@/store'
-import { Button } from '@/components/ui/button'
 import { MapView } from './components/MapView'
 import { HospitalDetailPanel } from './components/HospitalDetailPanel'
 import { HospitalExplorerList } from './components/HospitalExplorerList'
@@ -37,8 +36,8 @@ export function NetworkPage() {
   const rsParam = searchParams.get('rs')
   const medicineParam = searchParams.get('medicine')
   const focusParam = searchParams.get('focus')
+  const searchQueryParam = searchParams.get('q') ?? ''
 
-  // Default tab by role
   const defaultTab: Tab = currentUser?.role === 'approver' ? 'incoming' : 'map'
   const activeTab: Tab = tabParam ?? defaultTab
 
@@ -47,10 +46,12 @@ export function NetworkPage() {
     [hospitals, rsParam],
   )
 
-  const directTransferDialogOpen =
-    Boolean(medicineParam) && Boolean(selectedHospital) && currentUser?.role === 'requester'
+  const isRequester = currentUser?.role === 'requester'
 
-  const isDialogOpen = directTransferDialogOpen || headerNewRequestOpen
+  const directTransferDialogOpen =
+    Boolean(medicineParam) && Boolean(selectedHospital) && isRequester
+
+  const isDialogOpen = (directTransferDialogOpen || headerNewRequestOpen) && isRequester
 
   const detailModalOpen = Boolean(focusParam)
   const detailModalId = focusParam
@@ -123,27 +124,12 @@ export function NetworkPage() {
 
   return (
     <div className="mx-auto flex max-w-screen-xl flex-col gap-5">
-      {/* Page Header with Clean New Request Button */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-foreground text-2xl font-bold tracking-tight md:text-3xl">
-            {t('network.title')}
-          </h1>
-          <p className="text-muted-foreground mt-0.5 text-sm">{t('network.description')}</p>
-        </div>
-
-        {currentUser?.role === 'requester' && (
-          <div className="flex items-center gap-2">
-            <Button
-              size="default"
-              className="gap-2 rounded-xl font-semibold shadow-sm"
-              onClick={() => setHeaderNewRequestOpen(true)}
-            >
-              <Plus className="size-4" />
-              <span>{t('network.createNew')}</span>
-            </Button>
-          </div>
-        )}
+      {/* Page Header */}
+      <div>
+        <h1 className="text-foreground text-2xl font-bold tracking-tight md:text-3xl">
+          {t('network.title')}
+        </h1>
+        <p className="text-muted-foreground mt-0.5 text-sm">{t('network.description')}</p>
       </div>
 
       {/* Modern Segmented Tab Menu */}
@@ -192,7 +178,7 @@ export function NetworkPage() {
       {activeTab === 'map' && (
         <div className="grid items-start gap-5 lg:grid-cols-12">
           {/* Sticky 1-screen Map View */}
-          <div className="bg-card sticky top-4 flex h-[calc(100vh-10rem)] max-h-[720px] min-h-[480px] flex-col overflow-hidden rounded-2xl border shadow-sm lg:col-span-7 xl:col-span-8">
+          <div className="bg-card sticky top-4 flex h-[calc(100vh-10rem)] max-h-[720px] min-h-[480px] flex-col overflow-hidden rounded-2xl border shadow-sm lg:col-span-7 xl:col-span-7">
             <MapView
               hospitals={hospitals}
               selectedHospitalId={rsParam}
@@ -202,14 +188,13 @@ export function NetworkPage() {
           </div>
 
           {/* Side Panel: Detail or Hospital Explorer */}
-          <div className="flex flex-col lg:col-span-5 xl:col-span-4">
+          <div className="sticky top-4 flex h-[calc(100vh-10rem)] max-h-[720px] min-h-[480px] min-w-0 flex-col lg:col-span-5 xl:col-span-5">
             {selectedHospital ? (
               <HospitalDetailPanel
                 hospital={selectedHospital}
                 onClose={() => handleSelectHospital(null)}
                 onRequestTransfer={
-                  currentUser?.role === 'requester' &&
-                  currentUser.hospitalId !== selectedHospital.id
+                  isRequester && currentUser.hospitalId !== selectedHospital.id
                     ? handleRequestTransfer
                     : undefined
                 }
@@ -219,6 +204,7 @@ export function NetworkPage() {
                 hospitals={hospitals}
                 currentHospitalId={hospitalId}
                 onSelectHospital={(id) => handleSelectHospital(id)}
+                initialSearch={searchQueryParam}
               />
             )}
           </div>
@@ -230,7 +216,10 @@ export function NetworkPage() {
 
       {/* Outgoing tab */}
       {activeTab === 'outgoing' && (
-        <OutgoingRequestsTable onNewRequest={() => setHeaderNewRequestOpen(true)} />
+        <OutgoingRequestsTable
+          // Only 'requester' may create/send a new transfer request.
+          onNewRequest={isRequester ? () => setHeaderNewRequestOpen(true) : undefined}
+        />
       )}
 
       {/* History tab */}

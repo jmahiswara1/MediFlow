@@ -1,9 +1,5 @@
 import type { Conversation, TeamChatMessage } from '@/types'
 
-// Seed: 3 conversations (1 DM, 2 group) with realistic messages
-// All conversations include usr-001 (Rina) as a participant so demo feels alive
-// for the most common login.
-
 const SEED_BASE_DATE = '2026-08-30T07:00:00Z'
 
 export const conversationSeed: Conversation[] = [
@@ -41,14 +37,14 @@ export const conversationSeed: Conversation[] = [
   {
     id: 'conv-003',
     kind: 'group',
-    name: 'Real Estate Deals',
-    description: 'Diskusi mingguan kolega RS Sentosa.',
-    avatarSeed: 'RE',
+    name: 'Koordinasi Apoteker Klaster Pusat',
+    description: 'Diskusi mingguan apoteker penanggung jawab klaster Surabaya Pusat.',
+    avatarSeed: 'KA',
     participantIds: ['usr-003', 'usr-004', 'usr-001'],
     createdBy: 'usr-003',
     createdAt: '2026-08-20T13:00:00Z',
     lastActivityAt: '2026-08-29T15:32:00Z',
-    lastMessagePreview: 'Robert, don\u2019t be like that and say something more',
+    lastMessagePreview: 'Siap dok, saya jadwalkan rapat evaluasi hari Senin ya.',
     members: [
       { userId: 'usr-001', joinedAt: '2026-08-20T13:00:00Z', lastReadAt: '2026-08-29T16:00:00Z' },
       { userId: 'usr-003', joinedAt: '2026-08-20T13:00:00Z', lastReadAt: '2026-08-29T15:32:00Z' },
@@ -58,7 +54,6 @@ export const conversationSeed: Conversation[] = [
 ]
 
 export const messageSeed: TeamChatMessage[] = [
-  // conv-001 (Rina <-> Andi) - transfer coordination
   {
     id: 'msg-001',
     conversationId: 'conv-001',
@@ -88,7 +83,6 @@ export const messageSeed: TeamChatMessage[] = [
     createdAt: '2026-08-30T08:24:00Z',
   },
 
-  // conv-002 (Tim Stok Kritis Surabaya) - mentions + attachments
   {
     id: 'msg-005',
     conversationId: 'conv-002',
@@ -103,7 +97,7 @@ export const messageSeed: TeamChatMessage[] = [
     text: '@Siti Rahayu untuk stok Oseltamivir di RS PHC gimana? Saya lihat di dashboard agak tipis.',
     mentions: [
       { kind: 'user', refId: 'usr-004', label: 'Siti Rahayu', href: undefined },
-      { kind: 'medicine', refId: 'obt-002', label: 'Amoxicillin 500mg', href: '/analytics' },
+      { kind: 'medicine', refId: 'obt-004', label: 'Oseltamivir 75mg', href: '/analytics' },
     ],
     createdAt: '2026-08-30T08:15:00Z',
   },
@@ -137,36 +131,34 @@ export const messageSeed: TeamChatMessage[] = [
     createdAt: '2026-08-30T08:45:00Z',
   },
 
-  // conv-003 (Real Estate Deals) - generic group chatter
   {
     id: 'msg-010',
     conversationId: 'conv-003',
     senderId: 'usr-004',
-    text: 'Recently I saw properties in a great location that I did not pay attention to before',
+    text: 'Dok, laporan konsumsi cairan infus minggu ini sudah saya kirim ke email. Ada kenaikan cukup tajam di RS PHC.',
     createdAt: '2026-08-29T11:24:00Z',
   },
   {
     id: 'msg-011',
     conversationId: 'conv-003',
     senderId: 'usr-001',
-    text: 'Ooo, why don\u2019t you say something more',
+    text: 'Sudah saya terima, Bu Siti. Kalau boleh tahu penyebabnya lonjakan kasus DBD atau ada faktor lain?',
     createdAt: '2026-08-29T11:28:00Z',
   },
   {
     id: 'msg-012',
     conversationId: 'conv-003',
     senderId: 'usr-001',
-    text: 'He creates an atmosphere of mystery',
+    text: 'Soalnya di dashboard analitik kami juga muncul proyeksi kenaikan +28% untuk Surabaya Timur.',
     createdAt: '2026-08-29T11:36:00Z',
   },
   {
     id: 'msg-013',
     conversationId: 'conv-003',
     senderId: 'usr-004',
-    text: 'Robert, don\u2019t be like that and say something more',
+    text: 'Betul, sepertinya terkait DBD. Siap dok, saya jadwalkan rapat evaluasi hari Senin ya.',
     createdAt: '2026-08-29T15:32:00Z',
   },
 ]
 
-// Suppress unused warning (kept for future expansion)
 export const seedBaseDate = SEED_BASE_DATE
