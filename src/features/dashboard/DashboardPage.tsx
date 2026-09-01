@@ -99,9 +99,9 @@ export function DashboardPage() {
   )
 
   return (
-    <div className="mx-auto flex max-w-screen-xl flex-col gap-6">
+    <div className="mx-auto flex max-w-screen-xl flex-col gap-4 sm:gap-5 md:gap-6">
       {/* Row 1: Hero + Profile (12-col grid: 7 / 5) */}
-      <div className="grid gap-6 lg:grid-cols-12">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-12">
         <div className="lg:col-span-7">
           <HeroBanner />
         </div>
@@ -111,7 +111,7 @@ export function DashboardPage() {
       </div>
 
       {/* Row 2: KPI Strip (4 cards) */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         <KpiCard
           label={t('dashboard.criticalStock')}
           value={counts.critical}
@@ -165,7 +165,7 @@ export function DashboardPage() {
       <AiPredictionBanner insights={insights} />
 
       {/* Row 4: Stock Trends (7 cols) + Distribution (5 cols) */}
-      <div className="grid gap-6 lg:grid-cols-12">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-12">
         <div className="lg:col-span-7">
           <StockTrendsChart />
         </div>
@@ -175,7 +175,7 @@ export function DashboardPage() {
       </div>
 
       {/* Row 5: Mini Hospital List (7 cols) + Recent Transfers (5 cols) */}
-      <div className="grid gap-6 lg:grid-cols-12">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-12">
         <div className="lg:col-span-7">
           <MiniHospitalList />
         </div>

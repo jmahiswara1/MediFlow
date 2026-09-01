@@ -147,8 +147,15 @@ export function Navbar() {
   let lastRenderedKind: SearchResultKind | null = null
 
   return (
-    <header className="bg-card/85 border-border relative z-30 flex h-14 shrink-0 items-center gap-3 rounded-2xl border px-4 shadow-sm backdrop-blur-xl">
-      {/* Page title (left) */}
+    <header className="bg-card/85 border-border relative z-30 flex h-14 shrink-0 items-center gap-2 rounded-2xl border px-2.5 shadow-sm backdrop-blur-xl sm:gap-3 sm:px-4">
+      {/* Mobile Brand Logo */}
+      <div className="flex shrink-0 items-center gap-2 md:hidden">
+        <div className="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg p-0.5 shadow-2xs">
+          <img src="/logo.png" alt="MF" className="h-full w-full object-contain" />
+        </div>
+      </div>
+
+      {/* Page title (desktop left) */}
       <div className="hidden shrink-0 md:block">
         <h2 className="text-base font-semibold tracking-tight">{pageTitle}</h2>
       </div>
@@ -157,7 +164,7 @@ export function Navbar() {
       <div ref={containerRef} className="relative min-w-0 flex-1">
         <form
           onSubmit={handleSearchSubmit}
-          className="bg-muted/60 border-border focus-within:border-primary/50 flex h-9 min-w-0 items-center gap-2 rounded-xl border px-3 transition-colors"
+          className="bg-muted/60 border-border focus-within:border-primary/50 flex h-9 min-w-0 items-center gap-2 rounded-xl border px-2.5 transition-colors sm:px-3"
         >
           <button
             type="submit"

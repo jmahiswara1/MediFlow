@@ -36,15 +36,17 @@ export function StockDistributionCard({ items }: StockDistributionCardProps) {
   }))
 
   return (
-    <div className="bg-card text-card-foreground border-border flex h-full flex-col justify-between rounded-2xl border p-5 shadow-sm md:p-6">
-      <div>
-        <h3 className="text-base font-semibold tracking-tight">{t('distribution.title')}</h3>
+    <div className="bg-card text-card-foreground border-border flex h-full flex-col justify-between rounded-2xl border p-4 shadow-sm sm:p-5 md:p-6">
+      <div className="mb-2 sm:mb-0">
+        <h3 className="text-sm font-semibold tracking-tight sm:text-base">
+          {t('distribution.title')}
+        </h3>
         <p className="text-muted-foreground text-xs">{t('distribution.subtitle')}</p>
       </div>
 
-      <div className="my-auto flex flex-col items-center gap-5 sm:flex-row sm:items-center sm:justify-around">
+      <div className="my-auto flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-around sm:gap-5">
         {/* Donut Chart with Center Stat */}
-        <div className="relative size-36 shrink-0 md:size-40">
+        <div className="relative size-32 shrink-0 sm:size-36 md:size-40">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie

@@ -60,10 +60,12 @@ export function MiniHospitalList() {
     .slice(0, 4)
 
   return (
-    <div className="bg-card text-card-foreground border-border flex h-full flex-col justify-between rounded-2xl border p-5 shadow-sm md:p-6">
+    <div className="bg-card text-card-foreground border-border flex h-full flex-col justify-between rounded-2xl border p-4 shadow-sm sm:p-5 md:p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-base font-semibold tracking-tight">{t('hospitalList.title')}</h3>
+          <h3 className="text-sm font-semibold tracking-tight sm:text-base">
+            {t('hospitalList.title')}
+          </h3>
           <p className="text-muted-foreground text-xs">{t('hospitalList.subtitle')}</p>
         </div>
         <Link

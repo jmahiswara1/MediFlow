@@ -46,29 +46,29 @@ export function AiPredictionBanner({ insights }: AiPredictionBannerProps) {
   return (
     <div
       className={cn(
-        'bg-card border-border relative flex flex-col gap-4 rounded-2xl border p-5 shadow-sm transition-all md:p-6',
+        'bg-card border-border relative flex flex-col gap-3.5 rounded-2xl border p-4 shadow-sm transition-all sm:gap-4 sm:p-5 md:p-6',
         styles.border,
       )}
     >
       {/* Top Banner Content */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-4">
         <span
           className={cn(
-            'flex size-10 shrink-0 items-center justify-center rounded-xl border transition-colors',
+            'flex size-9 shrink-0 items-center justify-center rounded-xl border transition-colors sm:size-10',
             styles.badgeBg,
           )}
         >
-          <Sparkles className="size-5" />
+          <Sparkles className="size-4.5 sm:size-5" />
         </span>
 
-        <div className="min-w-0 flex-1 space-y-1.5">
+        <div className="min-w-0 flex-1 space-y-1 sm:space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+            <span className="text-muted-foreground text-[10px] font-semibold tracking-wider uppercase sm:text-xs">
               MediFlow AI Insight
             </span>
             <span
               className={cn(
-                'inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase',
+                'inline-flex items-center rounded-full border px-2 py-0.5 text-[9px] font-semibold tracking-wide uppercase sm:text-[10px]',
                 styles.badgeBg,
               )}
             >
@@ -76,17 +76,17 @@ export function AiPredictionBanner({ insights }: AiPredictionBannerProps) {
             </span>
           </div>
 
-          <h3 className="text-foreground text-base leading-snug font-semibold md:text-lg">
+          <h3 className="text-foreground text-sm leading-snug font-bold sm:text-base md:text-lg">
             {primary.headline}
           </h3>
 
-          <p className="text-muted-foreground text-sm leading-relaxed">{primary.body}</p>
+          <p className="text-muted-foreground text-xs leading-relaxed sm:text-sm">{primary.body}</p>
 
           {primary.cta && (
-            <div className="pt-1.5">
+            <div className="pt-1">
               <Link
                 to={primary.cta.href}
-                className="bg-primary/10 text-primary hover:bg-primary/15 inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors"
+                className="bg-primary/10 text-primary hover:bg-primary/15 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors sm:px-3"
               >
                 <span>{primary.cta.label}</span>
                 <ArrowRight className="size-3.5" />
@@ -98,14 +98,14 @@ export function AiPredictionBanner({ insights }: AiPredictionBannerProps) {
 
       {/* Secondary Insights Grid */}
       {secondary.length > 0 && (
-        <div className="border-border/70 grid gap-2.5 border-t pt-4 sm:grid-cols-2">
+        <div className="border-border/70 grid grid-cols-1 gap-2 border-t pt-3 sm:grid-cols-2 sm:gap-2.5 sm:pt-4">
           {secondary.map((item, idx) => {
             const itemTone = toneStyles[item.tone]
             return (
               <Link
                 key={`${item.type}-${idx}`}
                 to={item.cta?.href ?? '/'}
-                className="hover:bg-muted/60 group -mx-2 flex items-start gap-2.5 rounded-xl p-2.5 transition-colors"
+                className="hover:bg-muted/60 group -mx-1.5 flex items-start gap-2.5 rounded-xl p-2 transition-colors sm:-mx-2 sm:p-2.5"
               >
                 <span className={cn('mt-1.5 size-2 shrink-0 rounded-full', itemTone.dot)} />
                 <div className="min-w-0 flex-1">
