@@ -35,6 +35,10 @@ export const en = {
     toggleTheme: 'Toggle theme',
     openMenu: 'Open user menu',
     closeMenu: 'Close menu',
+    categoryHospitals: 'Hospitals',
+    categoryMedicines: 'Medicines',
+    categoryDiseases: 'Diseases',
+    noResults: 'No hospitals, medicines, or diseases match your search.',
   },
   login: {
     title: 'Choose an account',
@@ -82,6 +86,7 @@ export const en = {
     inbound: 'Inbound',
     outbound: 'Outbound',
     trendingDisease: 'Trending Disease',
+    vsLastWeek: 'vs last week',
     pendingOrders: 'Pending Orders',
     awaitingApproval: 'awaiting approval',
     noOutbreak: 'No outbreak detected',
@@ -120,6 +125,7 @@ export const en = {
     updated: 'Time',
     actions: 'Actions',
     processed: 'Processed',
+
     detail: {
       urgentShortage: 'Urgent Shortage',
       items: 'Medication Inventory',
@@ -154,6 +160,12 @@ export const en = {
     cancelConfirmTitle: 'Cancel Transfer Request?',
     cancelConfirmDescription:
       'Are you sure you want to cancel the transfer request for {medicine} to {hospital}?',
+    markShipped: 'Mark as Shipped',
+    expeditionLabel: 'Courier / Expedition',
+    expeditionPlaceholder: 'e.g. Internal Hospital Courier, JNE Cargo, etc.',
+    confirmReceipt: 'Confirm Received',
+    receivedByLabel: 'Received By',
+    receivedByPlaceholder: "Recipient's name",
   },
   analytics: {
     title: 'Analytics & Demand Projections',

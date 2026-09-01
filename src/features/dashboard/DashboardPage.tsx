@@ -106,7 +106,7 @@ export function DashboardPage() {
           <HeroBanner />
         </div>
         <div className="lg:col-span-5">
-          <ProfileCard activeCount={myActive.length} pendingCount={pendingOutgoing.length} />
+          <ProfileCard />
         </div>
       </div>
 
@@ -139,7 +139,7 @@ export function DashboardPage() {
           value={trendingDisease?.name ?? '-'}
           subText={
             trendingDisease
-              ? `${trendingDelta >= 0 ? '+' : ''}${trendingDelta}% ${t('dashboard.awaitingApproval')}`
+              ? `${trendingDelta >= 0 ? '+' : ''}${trendingDelta}% ${t('dashboard.vsLastWeek')}`
               : t('dashboard.noOutbreak')
           }
           icon={TrendingUp}

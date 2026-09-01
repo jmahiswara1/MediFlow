@@ -5,7 +5,7 @@ import type { TransferRequest, TransferStatus, Urgency } from '@/types'
 import { transferRequestList } from '@/data/transferRequests'
 import { userList } from '@/data/users'
 import { useNotificationStore } from './notificationStore'
-import { useHospitalId } from './authStore'
+import { useAuthStore, useHospitalId } from './authStore'
 
 type AddRequestPayload = Omit<TransferRequest, 'id' | 'createdAt' | 'timeline' | 'status'>
 
@@ -45,6 +45,18 @@ export const useTransferStore = create<TransferState>()(
       requests: transferRequestList,
 
       addRequest: (req) => {
+        // Role guard: only 'requester' is allowed to create/send a transfer
+        // request. 'approver' must only be able to approve/decline/ship.
+        // This is checked here too (not just in the UI) so the rule can't
+        // be bypassed by calling the store action directly.
+        const actingUser = useAuthStore.getState().currentUser
+        if (!actingUser || actingUser.role !== 'requester') {
+          console.warn(
+            `[transferStore] Blocked addRequest: role "${actingUser?.role ?? 'none'}" is not allowed to send a transfer request.`,
+          )
+          return ''
+        }
+
         const id = genId()
         const now = new Date().toISOString()
         const newReq: TransferRequest = {

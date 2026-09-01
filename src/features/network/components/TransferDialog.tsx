@@ -54,7 +54,6 @@ export function TransferDialog({
   const medicines = useStockStore((s) => s.medicines)
   const addRequest = useTransferStore((s) => s.addRequest)
 
-  // Available destination hospitals (exclude own hospital)
   const availableHospitals = useMemo(
     () => hospitals.filter((h) => h.id !== currentUser?.hospitalId),
     [hospitals, currentUser],
@@ -79,7 +78,6 @@ export function TransferDialog({
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({ defaultValues })
 
-  // Reset when opening
   useEffect(() => {
     if (open) {
       const targetId = toHospital?.id ?? availableHospitals[0]?.id ?? ''
@@ -115,7 +113,6 @@ export function TransferDialog({
 
   const maxAllowed = toStock ? Math.floor(toStock.currentStock * 0.5) : 0
 
-  // Hospital options for modern CustomSelect
   const hospitalOptions: SelectOption[] = useMemo(
     () =>
       availableHospitals.map((h) => ({
@@ -128,7 +125,6 @@ export function TransferDialog({
     [availableHospitals, t],
   )
 
-  // Medicine options for modern CustomSelect
   const medicineOptions: SelectOption[] = useMemo(
     () =>
       medicines.map((m) => {
@@ -155,8 +151,11 @@ export function TransferDialog({
     [medicines, effectiveToHospital],
   )
 
+  const canCreateRequest = currentUser?.role === 'requester'
+
   const onSubmit = (data: FormValues) => {
     if (!currentUser || !effectiveToHospital || !toStock) return
+    if (!canCreateRequest) return
     const medicine = medicines.find((m) => m.id === data.medicineId)
     if (!medicine) return
 
@@ -180,7 +179,9 @@ export function TransferDialog({
     onClose()
   }
 
-  if (!currentUser) return null
+  // Hard guard: never render the "send request" dialog for a non-requester
+  // (e.g. an 'approver'), even if a parent accidentally opens it.
+  if (!currentUser || !canCreateRequest) return null
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>

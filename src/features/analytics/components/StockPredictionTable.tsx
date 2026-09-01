@@ -8,12 +8,23 @@ import { cn } from '@/lib/utils'
 
 interface StockPredictionTableProps {
   items: StockPredictionItem[]
+  initialSearch?: string
 }
 
-export function StockPredictionTable({ items }: StockPredictionTableProps) {
+export function StockPredictionTable({ items, initialSearch = '' }: StockPredictionTableProps) {
   const { t } = useI18n()
   const navigate = useNavigate()
-  const [search, setSearch] = useState('')
+
+  // State untuk search input
+  const [search, setSearch] = useState(initialSearch)
+  // State untuk melacak perubahan props initialSearch
+  const [prevInitialSearch, setPrevInitialSearch] = useState(initialSearch)
+
+  // Gantikan useEffect: Update state sinkron saat render jika props berubah
+  if (initialSearch !== prevInitialSearch) {
+    setPrevInitialSearch(initialSearch)
+    setSearch(initialSearch)
+  }
 
   const filtered = useMemo(() => {
     if (!search.trim()) return items
@@ -53,9 +64,9 @@ export function StockPredictionTable({ items }: StockPredictionTableProps) {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="max-h-[520px] overflow-x-auto overflow-y-auto">
         <table className="w-full text-left text-xs">
-          <thead>
+          <thead className="bg-card sticky top-0 z-10">
             <tr className="text-muted-foreground border-border/60 bg-muted/20 border-b text-[11px] font-semibold tracking-wide uppercase">
               <th className="px-5 py-3">{t('analytics.table.medicine')}</th>
               <th className="px-3 py-3 text-right">{t('analytics.table.currentStock')}</th>
