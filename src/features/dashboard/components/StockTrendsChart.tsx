@@ -27,17 +27,19 @@ export function StockTrendsChart() {
   const maxValue = Math.max(...data.map((d) => Math.max(d.critical, d.low))) + 3
 
   return (
-    <div className="bg-card text-card-foreground border-border flex h-full flex-col justify-between rounded-2xl border p-5 shadow-sm md:p-6">
-      <div className="mb-4 flex items-start justify-between">
+    <div className="bg-card text-card-foreground border-border flex h-full flex-col justify-between rounded-2xl border p-4 shadow-sm sm:p-5 md:p-6">
+      <div className="mb-3 flex items-start justify-between sm:mb-4">
         <div>
-          <h3 className="text-base font-semibold tracking-tight">{t('dashboard.stockTrends')}</h3>
+          <h3 className="text-sm font-semibold tracking-tight sm:text-base">
+            {t('dashboard.stockTrends')}
+          </h3>
           <p className="text-muted-foreground text-xs">{t('dashboard.stockTrendsSub')}</p>
         </div>
       </div>
 
-      <div className="h-56 w-full md:h-64">
+      <div className="h-48 w-full sm:h-56 md:h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+          <AreaChart data={data} margin={{ top: 8, right: 6, left: -22, bottom: 0 }}>
             <defs>
               <linearGradient id="criticalArea" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="var(--critical)" stopOpacity={0.25} />

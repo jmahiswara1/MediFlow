@@ -113,23 +113,23 @@ export function KpiCard({
       type={interactive ? 'button' : undefined}
       onClick={onClick}
       className={cn(
-        'bg-card text-card-foreground border-border relative flex flex-col justify-between gap-3 rounded-2xl border p-5 text-left shadow-sm transition-all',
+        'bg-card text-card-foreground border-border relative flex flex-col justify-between gap-2.5 rounded-2xl border p-3.5 text-left shadow-sm transition-all sm:gap-3 sm:p-4 md:p-5',
         interactive &&
           'hover:border-primary/50 focus-visible:ring-ring cursor-pointer hover:shadow-md focus-visible:ring-2 focus-visible:outline-none',
       )}
     >
       {/* Top row: Label + Icon */}
       <div className="flex items-start justify-between gap-2">
-        <p className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+        <p className="text-muted-foreground text-[11px] font-semibold tracking-wide uppercase sm:text-xs">
           {label}
         </p>
         <span
           className={cn(
-            'flex size-9 shrink-0 items-center justify-center rounded-xl transition-colors',
+            'flex size-8 shrink-0 items-center justify-center rounded-xl transition-colors sm:size-9',
             styles.iconBg,
           )}
         >
-          <Icon className="size-4.5" />
+          <Icon className="size-4 sm:size-4.5" />
         </span>
       </div>
 
@@ -140,8 +140,8 @@ export function KpiCard({
             className={cn(
               'text-foreground font-bold tracking-tight',
               isTextValue
-                ? 'truncate text-xl leading-tight md:text-2xl'
-                : 'text-3xl tabular-nums md:text-4xl',
+                ? 'truncate text-lg leading-tight sm:text-xl md:text-2xl'
+                : 'text-2xl tabular-nums sm:text-3xl md:text-4xl',
             )}
             title={typeof value === 'string' ? value : undefined}
           >
@@ -151,7 +151,7 @@ export function KpiCard({
             <div className="mt-1 flex flex-wrap items-center gap-1.5">
               {delta !== undefined && <DeltaPill value={delta} />}
               {subText && (
-                <span className="text-muted-foreground truncate text-xs font-normal">
+                <span className="text-muted-foreground truncate text-[11px] font-normal sm:text-xs">
                   {subText}
                 </span>
               )}
